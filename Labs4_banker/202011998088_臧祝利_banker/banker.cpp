@@ -1,25 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define RESOURCE_NUM 10 // ×î´ó×ÊÔ´Êý
-#define PROCESS_NUM 10  // ×î´ó½ø³ÌÊý
-#define Length 10       // ×ÊÔ´Ãû³ÆµÄ×î´ó³¤¶È
+#define RESOURCE_NUM 10 // æœ€å¤§èµ„æºæ•°
+#define PROCESS_NUM 10  // æœ€å¤§è¿›ç¨‹æ•°
+#define Length 10       // èµ„æºåç§°çš„æœ€å¤§é•¿åº¦
 
-int Available[RESOURCE_NUM];               //¿ÉÓÃ×ÊÔ´¾ØÕó
-int MaxRequest[PROCESS_NUM][RESOURCE_NUM]; //×î´óÐèÇó¾ØÕó
-int Allocation[PROCESS_NUM][RESOURCE_NUM]; //·ÖÅä¾ØÕó
-int Need[PROCESS_NUM][RESOURCE_NUM];       //ÐèÇó¾ØÕó
-bool Finish[PROCESS_NUM];                  //ÅÐ¶ÏÏµÍ³ÊÇ·ñÓÐ×ã¹»×ÊÔ´·ÖÅä¸ø¸÷¸ö½ø³Ì
-int safeSeries[PROCESS_NUM];               //°²È«ÐòÁÐ
-int Request[RESOURCE_NUM];                 //ÇëÇó×ÊÔ´ÏòÁ¿
+int Available[RESOURCE_NUM];               //å¯ç”¨èµ„æºçŸ©é˜µ
+int MaxRequest[PROCESS_NUM][RESOURCE_NUM]; //æœ€å¤§éœ€æ±‚çŸ©é˜µ
+int Allocation[PROCESS_NUM][RESOURCE_NUM]; //åˆ†é…çŸ©é˜µ
+int Need[PROCESS_NUM][RESOURCE_NUM];       //éœ€æ±‚çŸ©é˜µ
+bool Finish[PROCESS_NUM];                  //åˆ¤æ–­ç³»ç»Ÿæ˜¯å¦æœ‰è¶³å¤Ÿèµ„æºåˆ†é…ç»™å„ä¸ªè¿›ç¨‹
+int safeSeries[PROCESS_NUM];               //å®‰å…¨åºåˆ—
+int Request[RESOURCE_NUM];                 //è¯·æ±‚èµ„æºå‘é‡
 
-int resource;                            //ÊäÈëµÄ×ÊÔ´ÊýÁ¿
-int process;                             //ÊäÈëµÄ½ø³ÌÊýÁ¿
-char ResourceName[RESOURCE_NUM][Length]; //¸÷×ÊÔ´Ãû³Æ
+int resource;                            //è¾“å…¥çš„èµ„æºæ•°é‡
+int process;                             //è¾“å…¥çš„è¿›ç¨‹æ•°é‡
+char ResourceName[RESOURCE_NUM][Length]; //å„èµ„æºåç§°
 
 void showInfo()
 {
-    printf("ÏµÍ³Ä¿Ç°¿ÉÓÃµÄ×ÊÔ´[Available]:\n");
+    printf("ç³»ç»Ÿç›®å‰å¯ç”¨çš„èµ„æº[Available]:\n");
     for (int i = 0; i < resource; i++)
     {
         printf("%s\t", ResourceName[i]);
@@ -32,7 +32,7 @@ void showInfo()
     printf("\n");
 
     printf("\tMax  Allocation  Need\n");
-    printf("½ø³Ì");
+    printf("è¿›ç¨‹");
     for (int i = 0; i < 3; i++)
     {
         printf("\t");
@@ -66,36 +66,36 @@ void showInfo()
 
 bool issafe()
 {
-    int work[RESOURCE_NUM]; //´æ·ÅÏµÍ³¿ÉÌá¹©×ÊÔ´Á¿
-    int safe_index = 0;     //ÐòÁÐÏÂ±ê
+    int work[RESOURCE_NUM]; //å­˜æ”¾ç³»ç»Ÿå¯æä¾›èµ„æºé‡
+    int safe_index = 0;     //åºåˆ—ä¸‹æ ‡
     int num = 0;
     for (int i = 0; i < resource; i++)
     {
-        work[i] = Available[i]; //³õÊ¼»¯work
+        work[i] = Available[i]; //åˆå§‹åŒ–work
     }
     for (int i = 0; i < process; i++)
     {
-        Finish[i] = false; //³õÊ¼»¯Finish
+        Finish[i] = false; //åˆå§‹åŒ–Finish
     }
 
-    for (int i = 0; i < process; i++) //Çó°²È«ÐòÁÐ
+    for (int i = 0; i < process; i++) //æ±‚å®‰å…¨åºåˆ—
     {
-        num = 0; //ÐèÒªµÄÊýÄ¿Ð¡ÓÚ¿ÉÀûÓÃ×ÊÔ´ÊýµÄ×ÊÔ´¸öÊý
+        num = 0; //éœ€è¦çš„æ•°ç›®å°äºŽå¯åˆ©ç”¨èµ„æºæ•°çš„èµ„æºä¸ªæ•°
         for (int j = 0; j < resource; j++)
         {
             if (Finish[i] == false && Need[i][j] <= work[j])
             {
                 num++;
-                //Ã¿Àà×ÊÔ´¶¼ÉÙÓÚ²Å¿É·ÖÅä
+                //æ¯ç±»èµ„æºéƒ½å°‘äºŽæ‰å¯åˆ†é…
                 if (num == resource)
                 {
                     for (int k = 0; k < resource; k++)
                     {
-                        work[k] += Allocation[i][k]; //¸ü¸Äµ±Ç°¿É·ÖÅäµÄ×ÊÔ´
+                        work[k] += Allocation[i][k]; //æ›´æ”¹å½“å‰å¯åˆ†é…çš„èµ„æº
                     }
                     Finish[i] = true;
                     safeSeries[safe_index++] = i;
-                    i = -1; //Ê¹µÃÃ¿´Î²éÑ¯¶¼´ÓµÚÒ»¸ö½ø³Ì¿ªÊ¼£»
+                    i = -1; //ä½¿å¾—æ¯æ¬¡æŸ¥è¯¢éƒ½ä»Žç¬¬ä¸€ä¸ªè¿›ç¨‹å¼€å§‹ï¼›
                 }
             }
         }
@@ -105,13 +105,13 @@ bool issafe()
     {
         if (Finish[i] == false)
         {
-            printf("ÏµÍ³²»´æÔÚ°²È«ÐòÁÐ!\n");
+            printf("ç³»ç»Ÿä¸å­˜åœ¨å®‰å…¨åºåˆ—!\n");
             return false;
         }
     }
     showInfo();
-    printf("ÏµÍ³°²È«!\n");
-    printf("´æÔÚÒ»¸ö°²È«ÐòÁÐ:");
+    printf("ç³»ç»Ÿå®‰å…¨!\n");
+    printf("å­˜åœ¨ä¸€ä¸ªå®‰å…¨åºåˆ—:");
     for (int i = 0; i < process; i++)
     {
         printf("%d", safeSeries[i]);
@@ -148,12 +148,12 @@ void reset(int processID)
 
 void banker()
 {
-    bool flag = true; //ÅÐ¶ÏÄÜ·ñ½øÈëËã·¨µÄÏÂÒ»²½
-    int processID;    //ËùÑ¡ÔñµÄ½ø³ÌºÅ
-    printf("ÇëÊäÈëÇëÇó·ÖÅäµÄ×ÊÔ´½ø³ÌºÅ(0-%d):", process - 1);
+    bool flag = true; //åˆ¤æ–­èƒ½å¦è¿›å…¥ç®—æ³•çš„ä¸‹ä¸€æ­¥
+    int processID;    //æ‰€é€‰æ‹©çš„è¿›ç¨‹å·
+    printf("è¯·è¾“å…¥è¯·æ±‚åˆ†é…çš„èµ„æºè¿›ç¨‹å·(0-%d):", process - 1);
     scanf("%d", &processID);
 
-    printf("ÇëÊäÈë½ø³Ì%dÒªÉêÇëµÄ×ÊÔ´¸öÊý:\n", processID);
+    printf("è¯·è¾“å…¥è¿›ç¨‹%dè¦ç”³è¯·çš„èµ„æºä¸ªæ•°:\n", processID);
     for (int i = 0; i < resource; i++)
     {
         printf("%s:", ResourceName[i]);
@@ -162,52 +162,52 @@ void banker()
 
     for (int i = 0; i < resource; i++)
     {
-        if (Request[i] > Need[processID][i]) //ÅÐ¶ÏÉêÇëÊÇ·ñ´óÓÚÐèÇó
+        if (Request[i] > Need[processID][i]) //åˆ¤æ–­ç”³è¯·æ˜¯å¦å¤§äºŽéœ€æ±‚
         {
-            printf("½ø³Ì%dÉêÇëµÄ×ÊÔ´´óÓÚËüÐèÒªµÄ×ÊÔ´", processID);
-            printf("·ÖÅä²»ºÏÀí£¬²»Óè·ÖÅä!\n");
+            printf("è¿›ç¨‹%dç”³è¯·çš„èµ„æºå¤§äºŽå®ƒéœ€è¦çš„èµ„æº", processID);
+            printf("åˆ†é…ä¸åˆç†ï¼Œä¸äºˆåˆ†é…!\n");
             flag = false;
             break;
         }
         else
         {
-            if (Request[i] > Available[i]) //ÅÐ¶ÏÉêÇëÊÇ·ñ´óÓÚµ±Ç°¿É·ÖÅä×ÊÔ´
+            if (Request[i] > Available[i]) //åˆ¤æ–­ç”³è¯·æ˜¯å¦å¤§äºŽå½“å‰å¯åˆ†é…èµ„æº
             {
-                printf("½ø³Ì%dÉêÇëµÄ×ÊÔ´´óÓÚÏµÍ³ÏÖÔÚ¿ÉÀûÓÃµÄ×ÊÔ´", processID);
+                printf("è¿›ç¨‹%dç”³è¯·çš„èµ„æºå¤§äºŽç³»ç»ŸçŽ°åœ¨å¯åˆ©ç”¨çš„èµ„æº", processID);
                 printf("\n");
-                printf("ÏµÍ³ÎÞ×ã¹»×ÊÔ´£¬²»Óè·ÖÅä!\n");
+                printf("ç³»ç»Ÿæ— è¶³å¤Ÿèµ„æºï¼Œä¸äºˆåˆ†é…!\n");
                 flag = false;
                 break;
             }
         }
     }
-    //³¢ÊÔ·ÖÅä×ÊÔ´£¬Ñ°ÕÒ°²È«ÐòÁÐ£»
+    //å°è¯•åˆ†é…èµ„æºï¼Œå¯»æ‰¾å®‰å…¨åºåˆ—ï¼›
     if (flag)
     {
-        set(processID); //³¢ÊÔ·ÖÅä
-        if (!issafe())  //Ñ°ÕÒ°²È«ÐòÁÐ£»Èç¹û²»°²È«£¬»Ö¸´×´Ì¬
+        set(processID); //å°è¯•åˆ†é…
+        if (!issafe())  //å¯»æ‰¾å®‰å…¨åºåˆ—ï¼›å¦‚æžœä¸å®‰å…¨ï¼Œæ¢å¤çŠ¶æ€
         {
             reset(processID);
-            printf("²»Óè·ÖÅä!\n");
+            printf("ä¸äºˆåˆ†é…!\n");
         }
     }
 }
 
 int main()
 {
-    printf("*****************µ¥´¦Àí»úÏµÍ³½ø³Ìµ÷¶ÈÊµÏÖ*****************\n");
-    printf("ÇëÊ×ÏÈÊäÈëÏµÍ³¿É¹©×ÊÔ´ÖÖÀàµÄÊýÁ¿:");
+    printf("*****************å•å¤„ç†æœºç³»ç»Ÿè¿›ç¨‹è°ƒåº¦å®žçŽ°*****************\n");
+    printf("è¯·é¦–å…ˆè¾“å…¥ç³»ç»Ÿå¯ä¾›èµ„æºç§ç±»çš„æ•°é‡:");
     scanf("%d", &resource);
     for (int i = 0; i < resource; i++)
     {
-        printf("ÊäÈë×ÊÔ´%dµÄÃû³Æ:", i + 1);
+        printf("è¾“å…¥èµ„æº%dçš„åç§°:", i + 1);
         scanf("%s", ResourceName[i]);
-        printf("ÊäÈë×ÊÔ´%dµÄÊýÁ¿:", i + 1);
+        printf("è¾“å…¥èµ„æº%dçš„æ•°é‡:", i + 1);
         scanf("%d", &Available[i]);
     }
-    printf("ÊäÈë½ø³ÌµÄÊýÁ¿:");
+    printf("è¾“å…¥è¿›ç¨‹çš„æ•°é‡:");
     scanf("%d", &process);
-    printf("ÊäÈë¸÷½ø³ÌµÄ×î´óÐèÇóÁ¿(%d*%d¾ØÕó)[MaxRequest]:\n", process, resource);
+    printf("è¾“å…¥å„è¿›ç¨‹çš„æœ€å¤§éœ€æ±‚é‡(%d*%dçŸ©é˜µ)[MaxRequest]:\n", process, resource);
     for (int i = 0; i < process; i++)
     {
         for (int j = 0; j < resource; j++)
@@ -215,7 +215,7 @@ int main()
             scanf("%d", &MaxRequest[i][j]);
         }
     }
-    printf("ÊäÈë¸÷½ø³ÌÒÑ¾­ÉêÇëµÄ×ÊÔ´Á¿(%d*%d¾ØÕó)[Allocation]:\n", process, resource);
+    printf("è¾“å…¥å„è¿›ç¨‹å·²ç»ç”³è¯·çš„èµ„æºé‡(%d*%dçŸ©é˜µ)[Allocation]:\n", process, resource);
     for (int i = 0; i < process; i++)
     {
         for (int j = 0; j < resource; j++)
@@ -223,7 +223,7 @@ int main()
             scanf("%d", &Allocation[i][j]);
         }
     }
-    //¼ÆËãNeed¾ØÕó
+    //è®¡ç®—NeedçŸ©é˜µ
     for (int i = 0; i < process; i++)
     {
         for (int j = 0; j < resource; j++)
@@ -237,10 +237,10 @@ int main()
 
     while (1)
     {
-        printf("*****************ÒøÐÐ¼ÒËã·¨ÑÝÊ¾*****************\n");
-        printf("\t\t1:·ÖÅä×ÊÔ´\n\t\t2:ÏÔÊ¾·ÖÅäÇé¿ö\n\t\t0:Àë¿ª\n");
+        printf("*****************é“¶è¡Œå®¶ç®—æ³•æ¼”ç¤º*****************\n");
+        printf("\t\t1:åˆ†é…èµ„æº\n\t\t2:æ˜¾ç¤ºåˆ†é…æƒ…å†µ\n\t\t0:ç¦»å¼€\n");
         printf("***********************************************\n");
-        printf("ÇëÑ¡Ôñ¹¦ÄÜºÅ:");
+        printf("è¯·é€‰æ‹©åŠŸèƒ½å·:");
         int option;
         scanf("%d", &option);
         if (option == 1)
@@ -254,7 +254,7 @@ int main()
         }
         else
         {
-            printf("ÒÑÀë¿ª!\n");
+            printf("å·²ç¦»å¼€!\n");
             break;
         }
     }
