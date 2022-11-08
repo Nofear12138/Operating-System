@@ -9,7 +9,9 @@ OS labs in BNU
 
 **In case of infringement, please contact to delete;**
 
-## labs1 & labs2 Reference:
+## labs1 & labs2
+
+Reference: 
 
 CSDN from [zheliku](https://blog.csdn.net/zheliku);
 
@@ -25,9 +27,20 @@ So what the teacher will ask you?
 * Run your code, remember print the products that your produce or consume;
 
 
-## labs4 Reference:
+## labs4
 
+Reference:
+  
 ①[Reference1](https://blog.csdn.net/qq_53988670/article/details/124375734) `(issafe(),set(),reset(),banker())`
 
 ②[Reference2](https://blog.csdn.net/Growing2020/article/details/121697973) `(showinfo(),code structure)`
+
+## labs5 
+
+If you want to do this lab, please learn the knowledge about it or you will feel so painful;
+
+It seems that it's hard to find the same or similar code if you just search for the content of lab document.But my one classmate gets the original code by searching for "pageFIFO.exe".The code is also put into the file named "page(1).c";
+
+
+
 
