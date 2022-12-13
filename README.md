@@ -41,6 +41,12 @@ If you want to do this lab, please learn the knowledge about it or you will feel
 
 It seems that it's hard to find the same or similar code if you just search for the content of lab document.But my one classmate gets the original code by searching for "pageFIFO.exe".The code is also put into the file named "page(1).c";
 
+## labs6
+
+Thanks to my one classmate, who gave me the labs about OS from other seniors and Mr.C, I could finish the considerable work in just 2 days. What I did in this lab was to correct bugs the teacher had told us. And there must be other errors in the code, but I think I couldn't find them.
+
+The functions I added were also normal, just for reference. I think you could do better!
+
 
 
 
